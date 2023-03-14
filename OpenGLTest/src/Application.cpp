@@ -3,10 +3,10 @@
 
 #include <iostream>
 
-
+//
 static unsigned int CompileShader( unsigned int type, const std::string& source) 
 {
-	unsigned int id = glCreateShader(type); //Creates the shader
+	unsigned int id = glCreateShader(type);				//Creates the shader
 	const char* src = source.c_str();                   //Converts the source to a c string
 	glShaderSource(id, 1, &src, nullptr);               //Sets the source of the shader
 	glCompileShader(id);                                //Compiles the shader
@@ -59,6 +59,10 @@ int main(void)
 
     //Create a windowed mode window and its OpenGL context
     window = glfwCreateWindow(640, 480, "Hello World", NULL, NULL);
+	glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 4);		//Sets the major version of OpenGL
+	glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 4.6);	//Sets the minor version of OpenGL
+	
+	//Error handling if window fails to create
     if (!window)
     {
         glfwTerminate();
@@ -68,6 +72,7 @@ int main(void)
     //Make the window's context current
 	glfwMakeContextCurrent(window);
 
+	//Initialize GLEW and print error when it fails
     if (glewInit() != GLEW_OK)
     {
 	    std::cout << "Glew is not OK" << std::endl;
@@ -85,10 +90,10 @@ int main(void)
     };
     
 	//Creates a buffer and stores the id in buffer
-    unsigned int buffer;
-	glGenBuffers(1, &buffer);
-    glBindBuffer(GL_ARRAY_BUFFER, buffer);
-	glBufferData(GL_ARRAY_BUFFER, 6 * sizeof(float), positions, GL_STATIC_DRAW);
+	unsigned int buffer;
+	glGenBuffers(1, &buffer);				//Creates 1 buffer and stores the id in "buffer"
+	glBindBuffer(GL_ARRAY_BUFFER, buffer);  //Binds the buffer to the vertex buffer
+	glBufferData(GL_ARRAY_BUFFER, 6 * sizeof(float), positions, GL_STATIC_DRAW);	//Sets the data of the buffer
 
 	//Enables the vertex attribute array
 	glEnableVertexAttribArray(0);
@@ -97,6 +102,7 @@ int main(void)
 	//                   index, size, type, normalized, stride, pointer
 	glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, sizeof(float) * 2, 0);
     
+	//Vertex shader code
     std::string vertexShader = 
 		"#version 440 core\n"
 		"\n"
@@ -106,6 +112,7 @@ int main(void)
 		"   gl_Position = position;\n"
 		"}\n";
 	
+	//Fragment shader code
 	std::string fragmentShader =
 		"#version 440 core\n"
 		"\n"
@@ -130,7 +137,7 @@ int main(void)
         glfwSwapBuffers(window);
 
         // Poll for and process events
-        glfwPollEvents();
+        glfwPollEvents(); 
     }
 
 	glDeleteProgram(shader); 
