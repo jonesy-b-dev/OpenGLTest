@@ -1,4 +1,3 @@
-
 #shader vertex
 #version 440 core
 

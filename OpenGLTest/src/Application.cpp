@@ -22,11 +22,10 @@ static ShaderProgramSource ParseShader(const std::string& filepath)
 		NONE = -1, VERTEX = 0, FRAGMENT = 1
 	};
 
-	ShaderType type = ShaderType::NONE;
-
 	std::string line;
 	std::stringstream ss[2];
-
+	ShaderType type = ShaderType::NONE;
+	
 	while (getline(stream, line))
 	{
 		if (line.find("#shader") != std::string::npos)
@@ -39,10 +38,10 @@ static ShaderProgramSource ParseShader(const std::string& filepath)
 			{
 				type = ShaderType::FRAGMENT;
 			}
-			else
-			{
-				ss[(int)type] << line << '\n';
-			}
+		}
+		else
+		{
+			ss[(int)type] << line << '\n';
 		}
 	}
 
