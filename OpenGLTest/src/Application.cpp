@@ -17,19 +17,23 @@ static ShaderProgramSource ParseShader(const std::string& filepath)
 {
 	std::ifstream stream(filepath);
 
+	//Enum that holds the diffrent types of shaders types
 	enum class ShaderType
 	{
 		NONE = -1, VERTEX = 0, FRAGMENT = 1
 	};
 
-	std::string line;
-	std::stringstream ss[2];
-	ShaderType type = ShaderType::NONE;
+	std::string line;						//Create string that holds the current line in the shader
+	std::stringstream ss[2];				//Create a string stream that holds the full source code of the shader
+	ShaderType type = ShaderType::NONE;		//Create a variable that holds the type of shader from the enum
 	
+	//Loop over the shader code and find the type of shader, then store the source code in the string stream
 	while (getline(stream, line))
 	{
+		//Find #shader in the shader file and check if it is a vertex or fragment shader
 		if (line.find("#shader") != std::string::npos)
 		{
+			//Now check if the line contains vertex or fragment
 			if (line.find("vertex") != std::string::npos)
 			{
 				type = ShaderType::VERTEX;
@@ -39,6 +43,7 @@ static ShaderProgramSource ParseShader(const std::string& filepath)
 				type = ShaderType::FRAGMENT;
 			}
 		}
+		//If the line does not contain #shader then store the line in the string stream, this is the actual source code
 		else
 		{
 			ss[(int)type] << line << '\n';
