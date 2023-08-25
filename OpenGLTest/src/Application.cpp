@@ -133,17 +133,25 @@ int main(void)
     
     
 	//Positions of the vertices
-    float positions[6] = {
-        -0.5f, -0.5f,
-         0.0f,  0.5f,
-         0.5f, -0.5f
+    float positions[] = {
+        -0.5f, -0.5f,	//0
+		 0.5f, -0.5f,	//1
+         0.5f,  0.5f,	//2
+		-0.5f,  0.5f,	//3
     };
+
+	//Indices of the vertices
+	unsigned int indices[] = {
+		0, 1, 2, //Triangle 1
+		2, 3, 0  //Triangle 2
+	};
     
-	//Creates a buffer and stores the id in buffer
+	//Creates a vertex buffer and stores the id in buffer
 	unsigned int buffer;
 	glGenBuffers(1, &buffer);				//Creates 1 buffer and stores the id in "buffer"
 	glBindBuffer(GL_ARRAY_BUFFER, buffer);  //Binds the buffer to the vertex buffer
-	glBufferData(GL_ARRAY_BUFFER, 6 * sizeof(float), positions, GL_STATIC_DRAW);	//Sets the data of the buffer
+				//target		//Size of the buffer	//Data	  //How the data is going to be used
+	glBufferData(GL_ARRAY_BUFFER, 6 * 2 *sizeof(float), positions, GL_STATIC_DRAW);	//Sets the data of the buffer
 
 	//Enables the vertex attribute array
 	glEnableVertexAttribArray(0);
@@ -152,6 +160,14 @@ int main(void)
 	//                   index, size, type, normalized, stride, pointer
 	glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, sizeof(float) * 2, 0);
     
+	//Creates a index buffer and stores the id in buffer
+	unsigned int ibo;
+	glGenBuffers(1, &ibo);						//Creates 1 buffer and stores the id in "buffer"
+	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ibo);  //Binds the buffer to the vertex buffer
+				//target				//Size of the buffer		//Data						6//How the data is going to be used
+	glBufferData(GL_ELEMENT_ARRAY_BUFFER, 6 * sizeof(unsigned int), indices, GL_STATIC_DRAW);	//Sets the data of the buffer
+	
+	//imlicit converting the parseshader return type to a ShaderProgrammSource
 	ShaderProgramSource source = ParseShader("res/shaders/Basic.shader");
 	std::cout << source.VertexSource << std::endl;
 	std::cout << source.FragmentSource << std::endl;
@@ -165,7 +181,7 @@ int main(void)
         // Render here
         glClear(GL_COLOR_BUFFER_BIT);
         
-		glDrawArrays(GL_TRIANGLES, 0, 3);
+		glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, nullptr);
 
         // Swap front and back buffers
         glfwSwapBuffers(window);
